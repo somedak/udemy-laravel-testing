@@ -1,0 +1,58 @@
+version: '3.5'
+
+networks:
+  udemy-laravel-testing-network:
+    driver: bridge
+
+services:
+  ### MySQL ################################################
+  mysql:
+    build:
+      context: ./docker/mysql
+      args:
+        - MYSQL_VERSION=${MYSQL_VERSION}
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./db/mysql:/var/lib/mysql
+    ports:
+      - "${IP}:3306:3306"
+    networks:
+      - udemy-laravel-testing-network
+
+  ### PHP8.0 ###############################################
+  php80:
+    build:
+      context: ./docker/php80
+    ports:
+      - "${IP}:80:80"
+    volumes:
+      - ${APP_CODE_PATH_SRC}:${APP_CODE_PATH_CONTAINER}
+      - ${APACHE_LOG_DIR}php80/:/var/log/apache2
+    environment:
+      - TZ=${TIMEZONE}
+    networks:
+      - udemy-laravel-testing-network
+
+  ### Redis ################################################
+  redis:
+    build: ./docker/redis
+    volumes:
+      - ./db/redis:/data
+    ports:
+      - "${IP}:6379:6379"
+    networks:
+      - udemy-laravel-testing-network
+
+  ### Selenium #############################################
+  selenium:
+    shm_size: '2gb'
+    image: selenium/standalone-chrome
+    ports:
+      - "${IP}:4444:4444"
+    networks:
+      - udemy-laravel-testing-network
