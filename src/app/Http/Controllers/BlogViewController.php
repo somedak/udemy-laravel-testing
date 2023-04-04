@@ -21,7 +21,7 @@ class BlogViewController extends Controller
 
     public function show(Blog $blog)
     {
-        if ($blog->status == Blog::CLOSED) {
+        if ($blog->isClosed()) {
             abort(403);
         }
         
