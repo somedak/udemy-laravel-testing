@@ -34,8 +34,7 @@ class BlogTest extends TestCase
     /** @test scopeOnlyOpen */
     function ブログの公開・非公開のscope()
     {
-        $blog1 = Blog::factory()->create([
-            'status' => Blog::CLOSED,
+        $blog1 = Blog::factory()->closed()->create([
             'title' => 'ブログA',
         ]);
         $blog2 = Blog::factory()->create(['title' => 'ブログB']);
