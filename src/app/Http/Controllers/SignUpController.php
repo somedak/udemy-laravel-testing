@@ -14,10 +14,16 @@ class SignUpController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->validate([
+            'name' => 'required|max:20',
+            'email' => 'required|email:filter|unique:users',
+            'password' => 'required|min:8',
+        ]);
+
         User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
         ]);
     }
 }
