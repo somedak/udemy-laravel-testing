@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers\Mypage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 /**
@@ -109,5 +110,27 @@ class UserLoginControllerTest extends TestCase
         $this->from($url)->followingRedirects()->post($url, $postData)
             ->assertSee('メールアドレスかパスワードが間違っています。')
             ->assertSee('<h1>ログイン画面</h1>', false);
+    }
+
+    /** @test login */
+    function 認証エラーなのでValidationExceptionの例外が発生する()
+    {
+        $this->withoutExceptionHandling();
+        
+        $postData = [
+            'email' => 'aaa@bbb.net',
+            'password' => 'abcd1234',
+        ];
+
+        // $dbData = [
+        //     'email' => 'aaa@bbb.net',
+        //     'password' => bcrypt('abcd1234'),
+        // ];
+
+        // $user = User::factory()->create($dbData);
+
+        $this->expectException(ValidationException::class);
+        
+        $this->post('mypage/login', $postData);
     }
 }
