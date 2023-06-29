@@ -18,7 +18,7 @@
     @foreach($blogs as $blog)
     <tr>
         <td>
-            {{ $blog->title }}
+            <a href="{{ route('mypage.blog.edit', $blog) }}">{{ $blog->title }}</a>
         </td>
     </tr>
     @endforeach

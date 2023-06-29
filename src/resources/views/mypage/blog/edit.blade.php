@@ -23,7 +23,7 @@
     <input type="checkbox" name="status" {{ data_get($data, 'status') ? 'checked': '' }} value="1">
     公開する
 </label>
-
+<br><br>
 <input type="submit" value="更新する">
 
 </form>
