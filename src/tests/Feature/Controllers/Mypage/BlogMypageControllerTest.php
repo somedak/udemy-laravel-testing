@@ -22,6 +22,7 @@ class BlogMypageControllerTest extends TestCase
         $this->get('mypage/blogs')->assertRedirect($url);
         $this->get('mypage/blogs/create')->assertRedirect($url);
         $this->post('mypage/blogs/create', [])->assertRedirect($url);
+        $this->get('mypage/blogs/edit/1')->assertRedirect($url);
     }
 
     /** @test index */
@@ -98,5 +99,34 @@ class BlogMypageControllerTest extends TestCase
         
         $this->post($url, ['body' => ''])
             ->assertSessionHasErrors(['body' => 'bodyは必ず指定してください。']);
+    }
+
+    /** @test edit */
+    function 他人のブログの編集画面は開けない()
+    {
+        $this->markTestIncomplete('まだ');
+    }
+
+    /** @test update */
+    function 他人のブログは更新できない()
+    {
+        $this->markTestIncomplete('まだ');
+    }
+
+    /** @test destroy */
+    function 他人のブログは削除できない()
+    {
+        $this->markTestIncomplete('まだ');
+    }
+
+    /** @test edit */
+    function 自分のブログの編集画面は開ける()
+    {
+        $blog = Blog::factory()->create();
+
+        $this->login($blog->user);
+
+        $this->get('mypage/blogs/edit/' . $blog->id)
+            ->assertOk();
     }
 }

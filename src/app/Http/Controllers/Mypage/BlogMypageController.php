@@ -32,4 +32,11 @@ class BlogMypageController extends Controller
 
         return redirect('mypage/blogs/edit/' . $blog->id);
     }
+
+    public function edit(Blog $blog)
+    {
+        $data = old() ?: $blog;
+        
+        return view('mypage.blog.edit', compact('blog', 'data'));
+    }
 }
