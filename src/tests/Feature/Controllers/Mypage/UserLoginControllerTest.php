@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers\Mypage;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -11,6 +12,8 @@ use Tests\TestCase;
  */
 class UserLoginControllerTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /** @test index */
     function ログイン画面を開ける()
     {
@@ -35,5 +38,26 @@ class UserLoginControllerTest extends TestCase
 
         $this->post($url, ['password' => ''])
             ->assertSessionHasErrors(['password' => 'パスワードは必ず指定してください。']);
+    }
+
+    /** @test login */
+    function ログインできる()
+    {
+        $postData = [
+            'email' => 'aaa@bbb.net',
+            'password' => 'abcd1234',
+        ];
+
+        $dbData = [
+            'email' => 'aaa@bbb.net',
+            'password' => bcrypt('abcd1234'),
+        ];
+
+        $user = User::factory()->create($dbData);
+
+        $this->post('mypage/login', $postData)
+            ->assertRedirect('mypage/blogs');
+
+        $this->assertAuthenticatedAs($user);
     }
 }
