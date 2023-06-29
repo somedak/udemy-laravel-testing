@@ -6,7 +6,7 @@
 
 <h1>マイブログ新規登録</h1>
 
-<form method="post" action="/mypage/blogs">
+<form method="post">
 @csrf
 
 @include('inc.error')
@@ -17,7 +17,7 @@
 <br>
 公開する：
 <label>
-    <input type="checkbox" name="published" value="1" {{ old('published') ? 'checked' : '' }}>
+    <input type="checkbox" name="status" value="1" {{ old('status') ? 'checked' : '' }}>
     公開する
 </label>
 <br><br>
