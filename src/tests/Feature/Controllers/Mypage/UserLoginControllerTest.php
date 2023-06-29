@@ -161,4 +161,30 @@ class UserLoginControllerTest extends TestCase
             );
         }
     }
+
+    /** @test login */
+    function 認証OKなのでValidationExceptionの例外が発生しない()
+    {
+        $this->withoutExceptionHandling();
+        
+        $postData = [
+            'email' => 'aaa@bbb.net',
+            'password' => 'abcd1234',
+        ];
+
+        $dbData = [
+            'email' => 'aaa@bbb.net',
+            'password' => bcrypt('abcd1234'),
+        ];
+
+        $user = User::factory()->create($dbData);
+
+        try {
+            $this->post('mypage/login', $postData);
+            $this->assertTrue(true);
+
+        } catch (ValidationException $e) {
+            $this->fail('ValidationExceptionの例外が発生してしまいました。');
+        }
+    }
 }
