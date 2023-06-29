@@ -104,7 +104,12 @@ class BlogMypageControllerTest extends TestCase
     /** @test edit */
     function 他人のブログの編集画面は開けない()
     {
-        $this->markTestIncomplete('まだ');
+        $blog = Blog::factory()->create();
+
+        $this->login();
+
+        $this->get('mypage/blogs/edit/' . $blog->id)
+            ->assertForbidden();
     }
 
     /** @test update */

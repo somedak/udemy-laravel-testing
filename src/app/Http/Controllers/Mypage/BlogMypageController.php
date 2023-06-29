@@ -33,8 +33,12 @@ class BlogMypageController extends Controller
         return redirect('mypage/blogs/edit/' . $blog->id);
     }
 
-    public function edit(Blog $blog)
+    public function edit(Blog $blog, Request $request)
     {
+        if ($request->user()->isNot($blog->user)) {
+            abort(403);
+        }
+        
         $data = old() ?: $blog;
         
         return view('mypage.blog.edit', compact('blog', 'data'));
