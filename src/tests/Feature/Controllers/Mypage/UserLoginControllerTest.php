@@ -13,7 +13,7 @@ use Tests\TestCase;
 class UserLoginControllerTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /** @test index */
     function ログイン画面を開ける()
     {
@@ -59,5 +59,55 @@ class UserLoginControllerTest extends TestCase
             ->assertRedirect('mypage/blogs');
 
         $this->assertAuthenticatedAs($user);
+    }
+
+    /** @test login */
+    function IDを間違えているのでログインできない()
+    {
+        $postData = [
+            'email' => 'aaa@bbb.net',
+            'password' => 'abcd1234',
+        ];
+
+        $dbData = [
+            'email' => 'ccc@bbb.net',
+            'password' => bcrypt('abcd1234'),
+        ];
+
+        $user = User::factory()->create($dbData);
+
+        $url = 'mypage/login';
+        
+        $this->from($url)->post($url, $postData)
+            ->assertRedirect($url);
+
+        $this->from($url)->followingRedirects()->post($url, $postData)
+            ->assertSee('メールアドレスかパスワードが間違っています。')
+            ->assertSee('<h1>ログイン画面</h1>', false);
+    }
+
+    /** @test login */
+    function パスワードを間違えているのでログインできない()
+    {
+        $postData = [
+            'email' => 'aaa@bbb.net',
+            'password' => 'abcd1234',
+        ];
+
+        $dbData = [
+            'email' => 'aaa@bbb.net',
+            'password' => bcrypt('abcd5678'),
+        ];
+
+        $user = User::factory()->create($dbData);
+
+        $url = 'mypage/login';
+        
+        $this->from($url)->post($url, $postData)
+            ->assertRedirect($url);
+
+        $this->from($url)->followingRedirects()->post($url, $postData)
+            ->assertSee('メールアドレスかパスワードが間違っています。')
+            ->assertSee('<h1>ログイン画面</h1>', false);
     }
 }
