@@ -10,7 +10,7 @@ class BlogMypageController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::where('user_id', auth()->id())->get();
+        $blogs = auth()->user()->blogs;
 
         return view('mypage.blog.index', compact('blogs'));
     }
