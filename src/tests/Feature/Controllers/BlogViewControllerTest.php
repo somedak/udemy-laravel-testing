@@ -57,23 +57,11 @@ class BlogViewControllerTest extends TestCase
     /** @test show */
     function ブログの詳細画面が表示でき、コメントが古い順に表示される()
     {
-        $blog = Blog::factory()->create();
-
-        Comment::factory()->create([
-            'created_at' => now()->sub('2 days'),
-            'name' => '太郎',
-            'blog_id' => $blog->id,
-        ]);
-        Comment::factory()->create([
-            'created_at' => now()->sub('3 days'),
-            'name' => '次郎',
-            'blog_id' => $blog->id,
-        ]);
-        Comment::factory()->create([
-            'created_at' => now()->sub('1 days'),
-            'name' => '三郎',
-            'blog_id' => $blog->id,
-        ]);
+        $blog = Blog::factory()->withCommentsData([
+            ['created_at' => now()->sub('2 days'), 'name' => '太郎'],
+            ['created_at' => now()->sub('3 days'), 'name' => '次郎'],
+            ['created_at' => now()->sub('1 days'), 'name' => '三郎'],
+        ])->create();
 
         $this->get('blogs/' . $blog->id)
             ->assertOk()
