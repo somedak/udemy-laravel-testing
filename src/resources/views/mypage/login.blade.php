@@ -21,5 +21,9 @@
 
 </form>
 
+<p style="margin-top: 30px;">
+    <a href="/signup">新規ユーザー登録</a>
+</p>
+
 
 @endsection
