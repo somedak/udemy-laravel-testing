@@ -50,8 +50,8 @@ class SignUpControllerTest extends TestCase
     {
         $url = 'signup';
 
-        // $this->post($url, [])
-        //     ->assertRedirect();
+        $this->from('signup')->post($url, [])
+            ->assertRedirect('signup');
 
         $this->post($url, ['name' => ''])
             ->assertSessionHasErrors(['name' => '名前は必ず指定してください。']);
