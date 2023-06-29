@@ -22,7 +22,8 @@ class BlogMypageController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all(['title', 'body', 'status']);
+        $data = $request->all(['title', 'body']);
+        $data['status'] = $request->boolean('status');
 
         $blog = auth()->user()->blogs()->create($data);
 

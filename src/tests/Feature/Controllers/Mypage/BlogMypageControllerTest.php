@@ -60,4 +60,20 @@ class BlogMypageControllerTest extends TestCase
 
         $this->assertDatabaseHas('blogs', $validData);
     }
+
+    /** @test store */
+    function マイページ、ブログを新規登録できる、非公開の場合()
+    {
+        $this->login();
+        
+        $validData = Blog::factory()->validData();
+        unset($validData['status']);
+
+        $this->post('mypage/blogs/create', $validData)
+            ->assertRedirect('mypage/blogs/edit/1')  // SQLiteのインメモリではNo.直打ちOK
+        ;
+
+        $validData['status'] = 0;
+        $this->assertDatabaseHas('blogs', $validData);
+    }
 }
