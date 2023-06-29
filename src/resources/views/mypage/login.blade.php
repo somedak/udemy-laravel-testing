@@ -1,4 +1,5 @@
 @extends('layouts.index')
+@section('title')ログイン画面@endsection
 
 @section('content')
 

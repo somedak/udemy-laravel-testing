@@ -1,4 +1,5 @@
 @extends('layouts.index')
+@section('title')TOP（ブログ一覧）@endsection
 
 @section('content')
 

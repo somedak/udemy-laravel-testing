@@ -1,4 +1,5 @@
 @extends('layouts.index')
+@section('title')ブログ詳細 (ID: {{ $blog->id }})@endsection
 
 @section('content')
 

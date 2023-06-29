@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ブログ</title>
+    <title>Udemy-Laravel-Testing | @yield('title')</title>
     <link type="text/css" rel="stylesheet" href="/css/style.css">
 </head>
 <body>

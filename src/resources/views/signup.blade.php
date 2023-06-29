@@ -1,4 +1,5 @@
 @extends('layouts.index')
+@section('title')ユーザー登録@endsection
 
 @section('content')
 
