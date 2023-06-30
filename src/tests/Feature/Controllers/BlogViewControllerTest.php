@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\Blog;
 use App\Models\Comment;
+use App\StrRandom;
 use Carbon\Carbon;
 use Facades\Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -113,8 +114,20 @@ class BlogViewControllerTest extends TestCase
 
         $blog = Blog::factory()->create();
         
-        Str::shouldReceive('random')
-            ->once()->with(10)->andReturn('HELLO_RAND');
+        // Str::shouldReceive('random')
+        //     ->once()->with(10)->andReturn('HELLO_RAND');
+
+        $mock = new Class ()
+        {
+            public function random(int $len)
+            {
+                if ($len !== 10) {
+                    throw new \Exception('引数がちがう');
+                }
+                return 'HELLO_RAND';
+            }
+        };
+        $this->app->instance(StrRandom::class, $mock);
 
         $this->get('blogs/' . $blog->id)
             ->assertOk()
