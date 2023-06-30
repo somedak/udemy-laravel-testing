@@ -116,7 +116,25 @@ class BlogMypageControllerTest extends TestCase
     /** @test update */
     function 他人のブログは更新できない()
     {
-        $this->markTestIncomplete('まだ');
+        $validData = [
+            'title' => '新タイトル',
+            'body' => '新本文',
+            'status' => '1',
+        ];
+
+        $blog = Blog::factory()->create();
+
+        $this->login();
+
+        $url = 'mypage/blogs/edit/' . $blog->id;
+
+        $this->post($url, $validData)
+            ->assertForbidden();
+
+        $this->assertDatabaseMissing('blogs', $validData);
+
+        $this->assertCount(1, Blog::all());
+        $this->assertEquals($blog->toArray(), Blog::first()->toArray());
     }
 
     /** @test destroy */
