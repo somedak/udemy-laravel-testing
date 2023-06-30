@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers;
 use App\Models\Blog;
 use App\Models\Comment;
 use Carbon\Carbon;
+use Facades\Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -103,5 +104,20 @@ class BlogViewControllerTest extends TestCase
         $this->get('blogs/' . $blog->id)
             ->assertOk()
             ->assertSee('メリークリスマス！');
+    }
+
+    /** @test show */
+    function ブログの詳細画面で、ランダムな文字列が10文字表示される()
+    {
+        $this->withoutMiddleware(\App\Http\Middleware\BlogShowLimit::class);
+
+        $blog = Blog::factory()->create();
+        
+        Str::shouldReceive('random')
+            ->once()->with(10)->andReturn('HELLO_RAND');
+
+        $this->get('blogs/' . $blog->id)
+            ->assertOk()
+            ->assertSee('HELLO_RAND');
     }
 }
