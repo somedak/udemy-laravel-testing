@@ -141,7 +141,14 @@ class BlogMypageControllerTest extends TestCase
     /** @test destroy */
     function 他人のブログは削除できない()
     {
-        $this->markTestIncomplete('まだ');
+        $blog = Blog::factory()->create();
+
+        $this->login();
+
+        $this->delete('mypage/blogs/delete/' . $blog->id)
+            ->assertForbidden();
+
+        $this->assertCount(1, Blog::all());
     }
 
     /** @test edit */

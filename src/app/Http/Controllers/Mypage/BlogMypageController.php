@@ -59,6 +59,10 @@ class BlogMypageController extends Controller
 
     public function destroy(Blog $blog, Request $request)
     {
+        if ($request->user()->isNot($blog->user)) {
+            abort(403);
+        }
+        
         $blog->delete();
         
         return redirect('mypage/blogs');
