@@ -117,16 +117,9 @@ class BlogViewControllerTest extends TestCase
         // Str::shouldReceive('random')
         //     ->once()->with(10)->andReturn('HELLO_RAND');
 
-        $mock = new Class ()
-        {
-            public function random(int $len)
-            {
-                if ($len !== 10) {
-                    throw new \Exception('引数がちがう');
-                }
-                return 'HELLO_RAND';
-            }
-        };
+        $mock = \Mockery::mock(StrRandom::class);
+        $mock->shouldReceive('random')
+            ->once()->with(10)->andReturn('HELLO_RAND');
         $this->app->instance(StrRandom::class, $mock);
 
         $this->get('blogs/' . $blog->id)
