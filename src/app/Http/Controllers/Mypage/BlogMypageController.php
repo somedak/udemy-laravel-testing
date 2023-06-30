@@ -57,6 +57,13 @@ class BlogMypageController extends Controller
             ->with('status', 'ブログを更新しました。');
     }
 
+    public function destroy(Blog $blog, Request $request)
+    {
+        $blog->delete();
+        
+        return redirect('mypage/blogs');
+    }
+
     private function validateInput()
     {
         return request()->validate([

@@ -24,6 +24,7 @@ class BlogMypageControllerTest extends TestCase
         $this->post('mypage/blogs/create', [])->assertRedirect($url);
         $this->get('mypage/blogs/edit/1')->assertRedirect($url);
         $this->post('mypage/blogs/edit/1')->assertRedirect($url);
+        $this->delete('mypage/blogs/delete/1')->assertRedirect($url);
     }
 
     /** @test index */
@@ -182,5 +183,21 @@ class BlogMypageControllerTest extends TestCase
         $blog->refresh();
         $this->assertEquals('新タイトル', $blog->title);
         $this->assertEquals('新本文', $blog->body);
+    }
+
+    /** @test destroy */
+    function 自分のブログは削除できる()
+    {
+        $blog = Blog::factory()->create();
+
+        $this->login($blog->user);
+
+        $this->delete('mypage/blogs/delete/' . $blog->id)
+            ->assertRedirect('mypage/blogs');
+
+        $this->assertDatabaseMissing('blogs', ['id' => $blog->id]);
+        $this->assertDatabaseMissing('blogs', $blog->only('id'));
+        $this->assertModelMissing($blog);
+        // ブログに付随するコメントの削除は省略
     }
 }
