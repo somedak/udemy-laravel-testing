@@ -7,11 +7,13 @@ use App\Models\Comment;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 
 class BlogViewControllerTest extends TestCase
 {
     use RefreshDatabase;
+    // use WithoutMiddleware;
 
     /** @test index */
     function ブログのTOPページを開ける()
@@ -57,6 +59,8 @@ class BlogViewControllerTest extends TestCase
     /** @test show */
     function ブログの詳細画面が表示でき、コメントが古い順に表示される()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\BlogShowLimit::class);
+        
         $blog = Blog::factory()->withCommentsData([
             ['created_at' => now()->sub('2 days'), 'name' => '太郎'],
             ['created_at' => now()->sub('3 days'), 'name' => '次郎'],
@@ -73,6 +77,8 @@ class BlogViewControllerTest extends TestCase
     /** @test show */
     function ブログで非公開のものは、詳細画面は表示できない()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\BlogShowLimit::class);
+        
         $blog = Blog::factory()->closed()->create();
 
         $this->get('blogs/' . $blog->id)
@@ -82,6 +88,8 @@ class BlogViewControllerTest extends TestCase
     /** @test show */
     function クリスマスの日は、メリークリスマス！と表示される()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\BlogShowLimit::class);
+        
         $blog = Blog::factory()->create();
 
         Carbon::setTestNow('2020-12-24');
